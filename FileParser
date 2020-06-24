@@ -1,83 +1,88 @@
-file = open(r"connections1.txt", "r")
-file2 = open(r"following.txt", "w+")
-file2.close()
-olist = file.readlines()
+class FileParser:
+  file = open(r"connections1.txt", "r")
+  file2 = open(r"following.txt", "w+")
+  file2.close()
+  olist = file.readlines()
 
  
-def findFollowRequest(list):
-  global start
-  global end
-  start = list[0].index("{")
-  end = list[0].index("},")
-  x = start
-  while(x<end+2):
-    list[0] = list[0][:x] + "" + list[0][x+1:]
-    end = end-1
+  def findFollowRequest(list):
+    global start
+    global end
+    start = list[0].index("{")
+    end = list[0].index("},")
+    x = start
+    while(x<end+2):
+      list[0] = list[0][:x] + "" + list[0][x+1:]
+      end = end-1
 
 
-def findDismissedUsers(list):
-  begin = list[0].index("dismissed_suggested_users")
-  num = len("dismissed_suggested_users")
-  x = begin
-  last = len(list[0])
-  while(x< last):
-    list[0] = list[0][:x] + "" + list[0][x+1:]
-    last = last -1
+  def findDismissedUsers(list):
+    begin = list[0].index("dismissed_suggested_users")
+    num = len("dismissed_suggested_users")
+    x = begin
+    last = len(list[0])
+    while(x< last):
+      list[0] = list[0][:x] + "" + list[0][x+1:]
+      last = last -1
 
-def saveFollowing(list):
-  begin = list[0].index("\"following\"")
-  last = list[0].index("}",begin)
-  x = begin
-  word = list[0][begin:last+1]
-  file3 = open(r"following.txt", "w+")
-  file3.write(word) 
-  file3.close()
+  def saveFollowing(list):
+    begin = list[0].index("\"following\"")
+    last = list[0].index("}",begin)
+    x = begin
+    word = list[0][begin:last+1]
+    file3 = open(r"following.txt", "w+")
+    file3.write(word) 
+    file3.close()
 
-def cutBrackets(list, word):
-  begin = list[0].index(word)
-  last = list[0].index("{")+1
-  x = begin
-  while(x<last):
-    list[0] = list[0][:x] + "" + list[0][x+1:]
-    last = last -1
-  begin = list[0].index("}")
-  last = len(list[0])
-  x = begin
-  while(x<last):
-    list[0] = list[0][:x] + "" + list[0][x+1:]
-    last = last -1
+  def cutBrackets(list, word):
+    begin = list[0].index(word)
+    last = list[0].index("{")+1
+    x = begin
+    while(x<last):
+      list[0] = list[0][:x] + "" + list[0][x+1:]
+      last = last -1
+    begin = list[0].index("}")
+    last = len(list[0])
+    x = begin
+    while(x<last):
+      list[0] = list[0][:x] + "" + list[0][x+1:]
+      last = last -1
 
-def separatePeople(list):
-  begin = 0
-  index = list[0].index(":")
-  end = list[0].index(",", index)
-  while(index != -1):
+  def separatePeople(list):
+    begin = 0
+    index = list[0].index(":")
+    end = list[0].index(",", index)
+    while(index != -1):
 
-    if(end-index > 30):
-      next = index
-      while(next<end):
-        list[0] = list[0][:next+1]+"," + list[0][next+2:]
-        begin = next+1
-        index = list[0].index(":", begin)
+      if(end-index > 30):
         next = index
-    try:
-      begin = end+1
-      index = list[0].index(":", begin)
-      end = list[0].index(",",  index)
-    except ValueError:
-      index = -1
+        while(next<end):
+          list[0] = list[0][:next+1]+"," + list[0][next+2:]
+          begin = next+1
+          index = list[0].index(":", begin)
+          next = index
+      try:
+        begin = end+1
+        index = list[0].index(":", begin)
+        end = list[0].index(",",  index)
+      except ValueError:
+        index = -1
 
 
-findFollowRequest(olist)
-findDismissedUsers(olist)
-saveFollowing(olist)
-cutBrackets(olist, "\"followers\"") 
-file4 = open(r"following.txt", "r")
-following = file4.readlines() 
-cutBrackets(following, "\"following\"")
-separatePeople(olist)
-separatePeople(following)
-#print(following)
-#print(olist)
+  findFollowRequest(olist)
+  findDismissedUsers(olist)
+  saveFollowing(olist)
+  cutBrackets(olist, "\"followers\"") 
+  file4 = open(r"following.txt", "r")
+  following = file4.readlines() 
+  cutBrackets(following, "\"following\"")
+  separatePeople(olist)
+  separatePeople(following)
+  #print(following)
+  #print(olist)
+
+
+
+
 
 
