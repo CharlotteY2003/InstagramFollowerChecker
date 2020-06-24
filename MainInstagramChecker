@@ -1,0 +1,153 @@
+file = open(r"connections1.txt", "r")
+file2 = open(r"followers.txt", "r")
+
+olist = file.readlines()
+followingList = file2.readlines()
+
+#print(olist)
+
+
+def markTimeStamps(list):
+  begin = 0
+  index = list[0].index(":", begin)
+  while(index != -1):
+  
+    try:
+      end = list[0].index(",", index)
+    except ValueError:
+      end = len(list[0])
+    #print(olist[0][index:end])
+  
+  
+  
+    
+    for x in range(index,end):
+      list[0] = list[0][:x] + "+" + list[0][x+1:]
+      
+  
+    begin = end
+  
+  
+    try:
+      index = list[0].index(":", begin)
+      #print(olist[0][index:index+20])
+    except ValueError:
+      index = -1
+  #print(olist)
+
+
+
+
+def eliminatePlus(list):
+  begin = 0
+  index = list[0].index("+", begin)
+  while(index !=-1):
+    try:
+      end = list[0].index(",", index)
+    except ValueError:
+      end = len(list[0])
+    
+    #print(list[0][index:end])
+
+    count = index
+
+    while(count<end):
+      list[0] = list[0][:count] + "" + list[0][count+1:]
+      end = end-1
+    
+    
+    
+    begin = end
+  
+    try:
+      index = list[0].index("+", begin)
+      #print(list[0][index:index+20])
+    except ValueError:
+      index = -1
+  #print(olist)
+
+
+markTimeStamps(olist)
+eliminatePlus(olist)
+#print(olist)
+
+markTimeStamps(followingList)
+eliminatePlus(followingList)
+#print(followingList)
+
+followers = []
+following = []
+
+def addPeople(fromList, addList):
+  begin = 0
+  index = fromList[0].index("\"", begin)
+  while(index != -1):
+  
+    try:
+      end = fromList[0].index("\"", index+1)
+    except ValueError:
+      end = len(fromList[0])
+    
+    
+    word = fromList[0][index + 1: end]
+    #print(word)
+    addList.append(word)
+      
+  
+    begin = end+1
+  
+  
+    try:
+      index = fromList[0].index("\"", begin)
+      #print(olist[0][index:index+20])
+    except ValueError:
+      index = -1
+
+addPeople(olist,followers)
+addPeople(followingList, following)
+#print(followers)
+#print(following)
+
+unfollow = []
+notFollow = []
+def checkFollowers(checkList):
+  for x in following:
+    success = False
+    for follower in followers:
+      if(x == follower):
+        success = True
+    if(success == False):
+      checkList.append(x)
+
+def youDoNotFollow(notList):
+  for x in followers:
+    success = False
+    for people in following:
+      if(x == people):
+        success = True
+    if(success == False):
+      notList.append(x)
+
+checkFollowers(unfollow)
+youDoNotFollow(notFollow)
+
+#print(unfollow)
+
+answer = input("Hi! Do you want to use the Instagram checker list?")
+
+while(answer.lower() == "yes"):
+  response = input("Great! Type \" 1 \" if you want to see who is not following you, type \" 2 \" if you want to see who you don't follow")
+  response = str(response)
+  while(response != "1" and response != "2"):
+    response = input("Please try again")
+  if(response == "1"):
+    print("Great! Here is the people who don't follow you")
+    print(unfollow)
+  else:
+    print("Great! Here is the people you don't follow")
+    print(notFollow)
+  answer = input("Do you want anything else?")
+
+print("Okay! Goodbye!")
+  
+ 
